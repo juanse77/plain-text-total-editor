@@ -1,118 +1,109 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import DocumentPicker from 'react-native-document-picker';
+import RNFS from 'react-native-fs';
+import { NativeModules } from 'react-native';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+const FileEditor = () => {
+    const [ fileUri, setFileUri ] = useState( null );
+    const [ fileName, setFileName ] = useState( '' );
+    const [ fileContent, setFileContent ] = useState( '' );
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+    // Función para seleccionar un archivo usando SAF
+    const openFile = async () => {
+        try {
+            const res = await DocumentPicker.pick( {
+                type: [
+                    DocumentPicker.types.plainText,
+                    'text/markdown',
+                    'application/json',
+                    'application/xml',
+                    'text/csv',
+                    'text/html',
+                    'text/css',
+                    'application/javascript',
+                    'application/typescript',
+                    'text/x-python',
+                    'application/x-sh',
+                    'application/x-bat',
+                    'text/x-ini',
+                    'text/x-conf',
+                ],
+                copyTo: 'documentDirectory', // Copiar el archivo al directorio de documentos de la aplicación
+            } );
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+            const file = res[ 0 ];
+            setFileUri( file.uri );
+            setFileName( file.name );
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+            const content = await RNFS.readFile( file.uri, 'utf8' );
+            setFileContent( content );
+        } catch ( err ) {
+            if ( DocumentPicker.isCancel( err ) ) {
+                console.log( 'Selección de archivo cancelada' );
+            } else {
+                console.error( 'Error al seleccionar archivo:', err );
+                Alert.alert( 'Error', 'No se pudo abrir el archivo' );
+            }
+        }
+    };
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+    const { MediaStoreModule } = NativeModules;
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+    const saveFileContent = async (fileName, fileContent) => {
+        try {
+            const result = await MediaStoreModule.saveFile(fileName, fileContent, (error, successMessage) => {
+                if (error) {
+                    console.error('Failed to save file:', error);
+                } else {
+                    console.log(successMessage);
+                }
+            });
+        } catch (error) {
+            console.error("Failed to save file:", error);
+        }
+    };
+    
+    return (
+        <View style={ styles.container }>
+            <Button title="Seleccionar Archivo" onPress={ openFile } />
+            { fileUri && (
+                <>
+                    <Text style={ styles.fileName }>Archivo: { fileName }</Text>
+                    <TextInput
+                        style={ styles.textInput }
+                        multiline
+                        value={ fileContent }
+                        onChangeText={ setFileContent }
+                    />
+                    <Button title="Guardar Cambios" onPress={() => saveFileContent(fileName, fileContent)} />
+                </>
+            ) }
         </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
+    );
+};
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+const styles = StyleSheet.create( {
+    container: {
+        flex: 1,
+        padding: 20,
+        justifyContent: 'center',
+        backgroundColor: '#f0f0f0',
+    },
+    fileName: {
+        marginTop: 20,
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    textInput: {
+        height: 200,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        marginTop: 20,
+        padding: 10,
+        backgroundColor: '#fff',
+        textAlignVertical: 'top',
+    },
+} );
 
-export default App;
+export default FileEditor;

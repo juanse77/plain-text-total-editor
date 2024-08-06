@@ -11,6 +11,12 @@ import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.soloader.SoLoader
 
+import com.facebook.react.bridge.NativeModule
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.uimanager.ViewManager
+
+import com.totalplaintextreader.MediaStoreModule
+
 class MainApplication : Application(), ReactApplication {
 
   override val reactNativeHost: ReactNativeHost =
@@ -19,6 +25,16 @@ class MainApplication : Application(), ReactApplication {
             PackageList(this).packages.apply {
               // Packages that cannot be autolinked yet can be added manually here, for example:
               // add(MyReactNativePackage())
+               add(object : ReactPackage {
+                    override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
+                        return listOf(MediaStoreModule(reactContext))
+                    }
+
+                    override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
+                        return emptyList()
+                    }
+                    
+                })
             }
 
         override fun getJSMainModuleName(): String = "index"
