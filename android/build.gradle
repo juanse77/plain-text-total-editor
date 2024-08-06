@@ -18,7 +18,7 @@ buildscript {
     // Dependencies for the build script
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion" // Kotlin Gradle plugin
-        classpath "com.android.tools.build:gradle:8.0.0" // Specify the appropriate version for your project
+        classpath "com.android.tools.build:gradle:8.2.0" // Specify the appropriate version for your project
         classpath "com.facebook.react:react-native-gradle-plugin" // React Native Gradle plugin, specify a version if necessary
     }
 }
