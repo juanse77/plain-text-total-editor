@@ -13,6 +13,8 @@ import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
 import { NativeModules, NativeEventEmitter } from 'react-native';
 
+import Link from './components/Link';
+
 const { FileIntentModule, MediaStoreModule } = NativeModules;
 
 const FileEditor = () => {
@@ -116,6 +118,11 @@ const FileEditor = () => {
             <TouchableOpacity style={ styles.button } onPress={ saveFileContent } activeOpacity={ 0.8 }>
                 <Text style={ styles.buttonText }>Save Changes</Text>
             </TouchableOpacity>
+
+            <View style={ { justifyContent: 'center', alignItems: 'center' } }>
+                <Text style={ { textAlignVertical: 'center', marginTop: 3 } }><Link url="https://buymeacoffee.com/total.plain.text.editor">Support the project with a coffee</Link> { "\u263A" }</Text>
+                <Text style={ styles.label }>© { new Date().getFullYear() } Total Plain Text Editor</Text>
+            </View>
 
         </View>
     );
