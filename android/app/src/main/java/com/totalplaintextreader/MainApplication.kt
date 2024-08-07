@@ -26,7 +26,10 @@ class MainApplication :
                     add(
                         object : ReactPackage {
                             override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> =
-                                listOf(MediaStoreModule(reactContext))
+                                listOf(
+                                    MediaStoreModule(reactContext),
+                                    FileIntentModule(reactContext)
+                                )
 
                             override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> = emptyList()
                         },

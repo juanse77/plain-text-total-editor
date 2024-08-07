@@ -41,19 +41,15 @@ class MediaStoreModule(
     fun saveFile(
         fileName: String,
         fileContent: String,
-        shouldOverwrite: Boolean,
         callback: Callback,
     ) {
         try {
             val fileUri = checkIfFileExists(fileName)
 
-            if (fileUri != null && !shouldOverwrite) {
+            if (fileUri != null) {
                 writeContentToFile(fileUri, fileContent)
                 callback.invoke(null, "File saved successfully.")
             } else {
-                if (fileUri != null) {
-                    reactContext.contentResolver.delete(fileUri, null, null) // Delete existing file
-                }
                 val uri = createFileUri(fileName)
                 writeContentToFile(uri, fileContent)
                 callback.invoke(null, "File saved successfully.")
