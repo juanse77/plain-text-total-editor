@@ -37,17 +37,12 @@
             <data android:mimeType="text/plain" />
             <data android:mimeType="text/markdown" />
             <data android:mimeType="application/json" />
-            <data android:mimeType="application/xml" />
-            <data android:mimeType="text/csv" />
             <data android:mimeType="text/html" />
             <data android:mimeType="text/css" />
             <data android:mimeType="application/javascript" />
-            <data android:mimeType="application/typescript" />
             <data android:mimeType="text/x-python" />
-            <data android:mimeType="application/x-sh" />
-            <data android:mimeType="application/x-bat" />
-            <data android:mimeType="text/x-ini" />
-            <data android:mimeType="text/x-conf" />
+            <data android:mimeType="text/x-perl" />
+            <data android:mimeType="text/x-c++src" />
         </intent-filter>
 
       </activity>

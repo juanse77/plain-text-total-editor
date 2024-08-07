@@ -21,18 +21,19 @@ class MediaStoreModule(
     private fun getMimeTypeFromExtension(fileName: String): String {
         val extension = fileName.substringAfterLast('.', "")
         return when (extension.toLowerCase()) {
+            "md" -> "text/markdown"
             "json" -> "application/json"
-            "xml" -> "application/xml"
-            "csv" -> "text/csv"
             "html" -> "text/html"
             "css" -> "text/css"
             "js" -> "application/javascript"
-            "ts" -> "application/typescript"
             "py" -> "text/x-python"
-            "sh" -> "application/x-sh"
-            "bat" -> "application/x-bat"
-            "ini" -> "text/x-ini"
-            "conf" -> "text/x-conf"
+            "pl" -> "text/x-perl"
+            "pm" -> "text/x-perl"
+            "cpp" -> "text/x-c++src"
+            "cxx" -> "text/x-c++src"
+            "cc" -> "text/x-c++src"
+            "h" -> "text/x-c++src"
+            "hpp" -> "text/x-c++src"
             else -> "text/plain" // Default MIME type
         }
     }
@@ -41,21 +42,14 @@ class MediaStoreModule(
     fun saveFile(
         fileName: String,
         fileContent: String,
-        callback: Callback,
     ) {
-        try {
-            val fileUri = checkIfFileExists(fileName)
+        val fileUri = checkIfFileExists(fileName)
 
-            if (fileUri != null) {
-                writeContentToFile(fileUri, fileContent)
-                callback.invoke(null, "File saved successfully.")
-            } else {
-                val uri = createFileUri(fileName)
-                writeContentToFile(uri, fileContent)
-                callback.invoke(null, "File saved successfully.")
-            }
-        } catch (e: Exception) {
-            callback.invoke(e.toString(), null)
+        if (fileUri != null) {
+            writeContentToFile(fileUri, fileContent)
+        } else {
+            val uri = createFileUri(fileName)
+            writeContentToFile(uri, fileContent)
         }
     }
 

@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
-import { NativeModules } from 'react-native';
+import { NativeModules, NativeEventEmitter } from 'react-native';
 
 const { FileIntentModule, MediaStoreModule } = NativeModules;
 
@@ -23,12 +23,24 @@ const FileEditor = () => {
     let fileNameLabel = "";
 
     useEffect( () => {
+        const handleFileIntentReceived = ( event ) => {
+            setFileUri( event.uri );
+            setFileName( event.name );
+            setFileContent( event.content );
+        };
+
+        const eventEmitter = new NativeEventEmitter( NativeModules.FileIntentModule );
+        const subscription = eventEmitter.addListener( 'onFileIntentReceived', handleFileIntentReceived );
+
+        return () => subscription.remove();
+    }, [] );
+
+    useEffect( () => {
         FileIntentModule.getInitialIntent()
             .then( ( data ) => {
                 setFileUri( data.uri );
                 setFileName( data.name );
                 setFileContent( data.content );
-                fileNameLabel = fileName;
             } )
             .catch( ( error ) => {
                 console.log( 'Error getting file intent:', error );
@@ -43,17 +55,12 @@ const FileEditor = () => {
                     DocumentPicker.types.plainText,
                     'text/markdown',
                     'application/json',
-                    'application/xml',
-                    'text/csv',
                     'text/html',
                     'text/css',
                     'application/javascript',
-                    'application/typescript',
                     'text/x-python',
-                    'application/x-sh',
-                    'application/x-bat',
-                    'text/x-ini',
-                    'text/x-conf',
+                    'text/x-perl',
+                    'text/x-c++src',
                 ],
             } );
             const file = res[ 0 ];
@@ -61,7 +68,6 @@ const FileEditor = () => {
             setFileName( file.name );
             const content = await RNFS.readFile( file.uri, 'utf8' );
             setFileContent( content );
-            fileNameLabel = fileName;
         } catch ( err ) {
             if ( DocumentPicker.isCancel( err ) ) {
                 console.log( 'File selection cancelled' );
@@ -90,31 +96,27 @@ const FileEditor = () => {
 
     return (
         <View style={ styles.container }>
-            <TouchableOpacity style={ styles.button } onPress={ openFile }>
+            <TouchableOpacity style={ styles.button } onPress={ openFile } activeOpacity={ 0.8 }>
                 <Text style={ styles.buttonText }>Select file</Text>
             </TouchableOpacity>
+            <Text style={ styles.fileName }>File: { fileName }</Text>
+            <TextInput
+                style={ styles.textInput }
+                multiline
+                value={ fileContent }
+                onChangeText={ setFileContent }
+            />
+            <Text style={ styles.label }>Modify the file name:</Text>
+            <TextInput
+                style={ styles.input }
+                onChangeText={ setFileName }
+                value={ fileName }
+                placeholder="Enter new name"
+            />
+            <TouchableOpacity style={ styles.button } onPress={ saveFileContent } activeOpacity={ 0.8 }>
+                <Text style={ styles.buttonText }>Save Changes</Text>
+            </TouchableOpacity>
 
-            { fileUri && (
-                <>
-                    <Text style={ styles.fileName }>File: { fileNameLabel }</Text>
-                    <TextInput
-                        style={ styles.textInput }
-                        multiline
-                        value={ fileContent }
-                        onChangeText={ setFileContent }
-                    />
-                    <Text style={ styles.label }>Modify the file name:</Text>
-                    <TextInput
-                        style={ styles.input }
-                        onChangeText={ setFileName }
-                        value={ fileName }
-                        placeholder="Enter new name"
-                    />
-                    <TouchableOpacity style={ styles.button } onPress={ saveFileContent }>
-                        <Text style={ styles.buttonText }>Save Changes</Text>
-                    </TouchableOpacity>
-                </>
-            ) }
         </View>
     );
 };
@@ -151,13 +153,6 @@ const styles = StyleSheet.create( {
         borderColor: 'gray',
         borderRadius: 3,
         fontSize: 12,
-    },
-    switchContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 3,
-        marginBottom: 3,
-        justifyContent: 'flex-start',
     },
     label: {
         fontWeight: 'bold',
