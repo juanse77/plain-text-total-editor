@@ -20,12 +20,15 @@ const FileEditor = () => {
     const [ fileName, setFileName ] = useState( '' );
     const [ fileContent, setFileContent ] = useState( '' );
 
+    let fileNameLabel = "";
+
     useEffect( () => {
         FileIntentModule.getInitialIntent()
             .then( ( data ) => {
                 setFileUri( data.uri );
                 setFileName( data.name );
                 setFileContent( data.content );
+                fileNameLabel = fileName;
             } )
             .catch( ( error ) => {
                 console.log( 'Error getting file intent:', error );
@@ -58,6 +61,7 @@ const FileEditor = () => {
             setFileName( file.name );
             const content = await RNFS.readFile( file.uri, 'utf8' );
             setFileContent( content );
+            fileNameLabel = fileName;
         } catch ( err ) {
             if ( DocumentPicker.isCancel( err ) ) {
                 console.log( 'File selection cancelled' );
@@ -69,30 +73,20 @@ const FileEditor = () => {
     }
 
     const saveFileContent = async () => {
-
-        if ( fileName === "" ) {
+        if ( !fileName ) {
             Alert.alert( "You must give a file name" );
             return;
         }
 
         try {
-            const result = await NativeModules.MediaStoreModule.saveFile(
-                fileName,
-                fileContent,
-                ( error, success ) => {
-                    if ( error ) {
-                        console.error( 'Failed to save file:', error );
-                        Alert.alert("Failed to save file");
-                    } else {
-                        console.log( 'File saved successfully:', success );
-                        Alert.alert('File saved successfully');
-                    }
-                },
-            );
+            const success = await MediaStoreModule.saveFile( fileName, fileContent );
+            console.log( 'File saved successfully:', success );
+            Alert.alert( 'File saved successfully' );
         } catch ( error ) {
             console.error( 'Failed to save file:', error );
+            Alert.alert( "Failed to save file" );
         }
-    };
+    };;
 
     return (
         <View style={ styles.container }>
@@ -102,7 +96,7 @@ const FileEditor = () => {
 
             { fileUri && (
                 <>
-                    <Text style={ styles.fileName }>File: { fileName }</Text>
+                    <Text style={ styles.fileName }>File: { fileNameLabel }</Text>
                     <TextInput
                         style={ styles.textInput }
                         multiline
