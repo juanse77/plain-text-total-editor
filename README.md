@@ -17,11 +17,11 @@ This project is licensed under the MIT License.
 
 For any questions or support, please contact [juanseraar@outlook.es](mailto:juanseraar@outlook.es).
 
-## Donate:
-If you want to contribute to our initiative, please [support us with a coffee](https://buymeacoffee.com/total.plain.text.editor) ;D
-
 ## Privacy Policy:
 
 You can check the privacy policy in [Total-Plain-Text-Editor Pivacy Policy](https://juanse77.github.io/total-plain-text-editor/)
+
+## Donate:
+If you want to contribute to our initiative, please [support us with a coffee](https://buymeacoffee.com/total.plain.text.editor) ;D
 
 &copy; 2024 Total Plain Text Editor
