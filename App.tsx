@@ -141,6 +141,7 @@ const styles = StyleSheet.create( {
         marginTop: 3,
         fontSize: 12,
         fontWeight: 'bold',
+        color: '#333',
     },
     textInput: {
         flex: 1,
@@ -151,6 +152,7 @@ const styles = StyleSheet.create( {
         padding: 5,
         backgroundColor: '#fff',
         textAlignVertical: 'top',
+        color: '#333',
     },
     input: {
         width: '100%',
@@ -160,12 +162,14 @@ const styles = StyleSheet.create( {
         borderColor: 'gray',
         borderRadius: 3,
         fontSize: 12,
+        color: '#333',
     },
     label: {
         fontWeight: 'bold',
         fontSize: 12,
         marginBottom: 3,
         marginTop: 3,
+        color: '#333',
     },
     button: {
         backgroundColor: '#FF6347',  // Un color vistoso, Tomate
