@@ -121,7 +121,11 @@ const FileEditor = () => {
 
             <View style={ { justifyContent: 'center', alignItems: 'center' } }>
                 <Text style={ { textAlignVertical: 'center', marginTop: 3 } }><Link url="https://buymeacoffee.com/total.plain.text.editor">Support the project with a coffee</Link> { "\u263A" }</Text>
-                <Text style={ styles.label }>© { new Date().getFullYear() } Total Plain Text Editor</Text>
+                <Text style={ styles.label }>
+                    <Link url="https://juanse77.github.io/total-plain-text-editor/">
+                        © { new Date().getFullYear() } Total Plain Text Editor
+                    </Link>
+                </Text>
             </View>
 
         </View>
