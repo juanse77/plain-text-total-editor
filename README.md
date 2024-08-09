@@ -24,4 +24,4 @@ You can check the privacy policy in [Total-Plain-Text-Editor Pivacy Policy](http
 ## Donate:
 If you want to contribute to our initiative, please [support us with a coffee](https://buymeacoffee.com/total.plain.text.editor) ;D
 
-&copy; 2024 [Total Plain Text Editor](https://juanse77.github.io/total-plain-text-editor/)
+&copy; 2024 Total Plain Text Editor
