@@ -80,28 +80,39 @@ const FileEditor = () => {
         }
     }
 
-    const saveFileContent = async () => {
+    const saveFileContent = () => {
         if ( !fileName ) {
             Alert.alert( "You must give a file name" );
             return;
         }
 
-        try {
-            const success = await MediaStoreModule.saveFile( fileName, fileContent );
-            console.log( 'File saved successfully:', success );
-            Alert.alert( 'File saved successfully' );
-        } catch ( error ) {
-            console.error( 'Failed to save file:', error );
-            Alert.alert( "Failed to save file" );
-        }
-    };;
+        MediaStoreModule.saveFile( fileName, fileContent ).then(uri => {
+            Alert.alert('File successfully saved');
+            console.log('File saved at URI:', uri);
+          })
+          .catch(error => {
+            Alert.alert('Error saving file');
+            console.error('Error saving file:', error);
+          });
+    };
+
+    const newFile = function () {
+        setFileName( '' );
+        setFileContent( '' );
+        setFileUri(null);
+    };
 
     return (
         <View style={ styles.container }>
             <TouchableOpacity style={ styles.button } onPress={ openFile } activeOpacity={ 0.8 }>
                 <Text style={ styles.buttonText }>Select file</Text>
             </TouchableOpacity>
-            <Text style={ styles.fileName }>File: { fileName }</Text>
+            <View style={ styles.menu }>
+                <Text style={ styles.fileName }>File: { fileName }</Text>
+                <TouchableOpacity style={ styles.add } onPress={ newFile } activeOpacity={ 0.8 }>
+                    <Text style={ styles.buttonText }>+</Text>
+                </TouchableOpacity>
+            </View>
             <TextInput
                 style={ styles.textInput }
                 multiline
@@ -139,6 +150,11 @@ const styles = StyleSheet.create( {
         justifyContent: 'flex-start',
         alignItems: 'stretch',
         backgroundColor: '#f0f0f0',
+    },
+    menu: {
+        flexDirection: 'row', // Alinea los hijos en una fila
+        justifyContent: 'space-between', // Espacia los elementos al máximo
+        alignItems: 'center'
     },
     fileName: {
         marginTop: 3,
@@ -182,6 +198,15 @@ const styles = StyleSheet.create( {
         justifyContent: 'center',    // Alinea el texto al centro verticalmente
         width: '100%',               // Ocupa el 100% del ancho del contenedor padre
         marginVertical: 3,           // Margen vertical para separar de otros elementos si es necesario
+    },
+    add: {
+        backgroundColor: '#FF6347',
+        paddingVertical: 5,
+        paddingHorizontal: 20,
+        borderRadius: 3,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginVertical: 3,
     },
     buttonText: {
         fontSize: 12,                // Tamaño de texto

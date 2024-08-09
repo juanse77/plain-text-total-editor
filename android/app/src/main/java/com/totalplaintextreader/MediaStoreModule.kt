@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.Callback
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -42,14 +43,25 @@ class MediaStoreModule(
     fun saveFile(
         fileName: String,
         fileContent: String,
+        promise: Promise
     ) {
-        val fileUri = checkIfFileExists(fileName)
+        try {
+            var fileUri = checkIfFileExists(fileName)
 
-        if (fileUri != null) {
-            writeContentToFile(fileUri, fileContent)
-        } else {
-            val uri = createFileUri(fileName)
-            writeContentToFile(uri, fileContent)
+            if (fileUri != null) {
+                writeContentToFile(fileUri, fileContent)
+            } else {
+                fileUri = createFileUri(fileName)
+                writeContentToFile(fileUri, fileContent)
+            }
+
+            if (fileUri != null) {
+                promise.resolve(fileUri.toString())
+            } else {
+                promise.reject("File Error", "Could not create or write to file")
+            }
+        } catch (e: Exception) {
+            promise.reject("Exception", e)
         }
     }
 
@@ -91,7 +103,7 @@ class MediaStoreModule(
         content: String,
     ) {
         uri?.let {
-            reactContext.contentResolver.openOutputStream(it)?.use { outputStream ->
+            reactContext.contentResolver.openOutputStream(it, "wt")?.use { outputStream ->
                 outputStream.bufferedWriter().use { writer ->
                     writer.write(content)
                 }
@@ -100,4 +112,5 @@ class MediaStoreModule(
             Log.e("MediaStoreModule", "Failed to get URI for writing content.")
         }
     }
+
 }

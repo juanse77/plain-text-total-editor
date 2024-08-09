@@ -106,7 +106,7 @@ class FileIntentModule(reactContext: ReactApplicationContext) : ReactContextBase
                 val fileContent = fileInputStream?.bufferedReader().use { it?.readText() } ?: "" // Leer el contenido
 
                 val map = Arguments.createMap()
-                map.putString("uri", fileUri.toString())
+                //map.putString("uri", fileUri.toString())
                 map.putString("name", fileName)
                 map.putString("content", fileContent)
                 promise.resolve(map)
