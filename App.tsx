@@ -120,7 +120,6 @@ const FileEditor = () => {
             </TouchableOpacity>
 
             <View style={ { justifyContent: 'center', alignItems: 'center' } }>
-                <Text style={ { textAlignVertical: 'center', marginTop: 3 } }><Link url="https://buymeacoffee.com/total.plain.text.editor">Support the project with a coffee</Link> { "\u263A" }</Text>
                 <Text style={ styles.label }>
                     <Link url="https://juanse77.github.io/total-plain-text-editor/">
                         © { new Date().getFullYear() } Total Plain Text Editor
@@ -149,11 +148,11 @@ const styles = StyleSheet.create( {
     },
     textInput: {
         flex: 1,
-        fontSize: 10,
         borderColor: '#ccc',
         borderWidth: 1,
         marginTop: 10,
         padding: 5,
+        fontSize: 16,
         backgroundColor: '#fff',
         textAlignVertical: 'top',
         color: '#333',
