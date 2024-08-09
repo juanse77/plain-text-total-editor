@@ -12,6 +12,10 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 
+import android.database.Cursor
+import android.provider.OpenableColumns
+
+
 class MediaStoreModule(
     private val reactContext: ReactApplicationContext,
 ) : ReactContextBaseJavaModule(reactContext) {
@@ -62,6 +66,27 @@ class MediaStoreModule(
             }
         } catch (e: Exception) {
             promise.reject("Exception", e)
+        }
+    }
+
+    @ReactMethod
+    fun getFileName(uriString: String, promise: Promise) {
+        val uri = Uri.parse(uriString)
+        val cursor: Cursor? = reactContext.contentResolver.query(uri, null, null, null, null)
+        cursor?.use {
+            if (cursor.moveToFirst()) {
+                val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                if (nameIndex != -1) {
+                    val fileName = cursor.getString(nameIndex)
+                    promise.resolve(fileName)
+                } else {
+                    promise.reject("File Error", "Unable to retrieve file name")
+                }
+            } else {
+                promise.reject("File Error", "No file found")
+            }
+        } ?: run {
+            promise.reject("File Error", "Failed to query file")
         }
     }
 
