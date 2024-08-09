@@ -21,6 +21,7 @@ const FileEditor = () => {
     const [ fileUri, setFileUri ] = useState( null );
     const [ fileName, setFileName ] = useState( '' );
     const [ fileContent, setFileContent ] = useState( '' );
+    const [ currentFileName, setCurrentFileName ] = useState( '' );
 
     let fileNameLabel = "";
 
@@ -28,6 +29,7 @@ const FileEditor = () => {
         const handleFileIntentReceived = ( event ) => {
             setFileUri( event.uri );
             setFileName( event.name );
+            setCurrentFileName( event.name );
             setFileContent( event.content );
         };
 
@@ -42,6 +44,7 @@ const FileEditor = () => {
             .then( ( data ) => {
                 setFileUri( data.uri );
                 setFileName( data.name );
+                setCurrentFileName( data.name );
                 setFileContent( data.content );
             } )
             .catch( ( error ) => {
@@ -68,6 +71,7 @@ const FileEditor = () => {
             const file = res[ 0 ];
             setFileUri( file.uri );
             setFileName( file.name );
+            setCurrentFileName( file.name );
             const content = await RNFS.readFile( file.uri, 'utf8' );
             setFileContent( content );
         } catch ( err ) {
@@ -86,20 +90,26 @@ const FileEditor = () => {
             return;
         }
 
-        MediaStoreModule.saveFile( fileName, fileContent ).then(uri => {
-            Alert.alert('File successfully saved');
-            console.log('File saved at URI:', uri);
-          })
-          .catch(error => {
-            Alert.alert('Error saving file');
-            console.error('Error saving file:', error);
-          });
+        MediaStoreModule.saveFile( fileName, fileContent ).then( uri => {
+            MediaStoreModule.getFileName( uri ).then( fileName => {
+                Alert.alert( 'File successfully saved as: ' + fileName );
+                setFileName( fileName );
+                setCurrentFileName( fileName );
+                console.log( 'File saved at URI:', uri );
+            } ).catch( error => {
+                Alert.alert( 'Error retrieving file name' );
+                console.error( 'Error retrieving file name:', error );
+            } );
+        } ).catch( error => {
+            Alert.alert( 'Error saving file' );
+            console.error( 'Error saving file:', error );
+        } );
     };
 
     const newFile = function () {
         setFileName( '' );
         setFileContent( '' );
-        setFileUri(null);
+        setFileUri( null );
     };
 
     return (
@@ -108,7 +118,7 @@ const FileEditor = () => {
                 <Text style={ styles.buttonText }>Select file</Text>
             </TouchableOpacity>
             <View style={ styles.menu }>
-                <Text style={ styles.fileName }>File: { fileName }</Text>
+                <Text style={ styles.fileName }>File: { currentFileName }</Text>
                 <TouchableOpacity style={ styles.add } onPress={ newFile } activeOpacity={ 0.8 }>
                     <Text style={ styles.buttonText }>+</Text>
                 </TouchableOpacity>
@@ -118,13 +128,14 @@ const FileEditor = () => {
                 multiline
                 value={ fileContent }
                 onChangeText={ setFileContent }
+                placeholder="Write your notes..."
             />
-            <Text style={ styles.label }>Modify the file name:</Text>
+            <Text style={ styles.label }>Set the file name:</Text>
             <TextInput
                 style={ styles.input }
                 onChangeText={ setFileName }
                 value={ fileName }
-                placeholder="Enter new name"
+                placeholder="Enter the file name..."
             />
             <TouchableOpacity style={ styles.button } onPress={ saveFileContent } activeOpacity={ 0.8 }>
                 <Text style={ styles.buttonText }>Save Changes</Text>
