@@ -1,6 +1,6 @@
-# Total Plain Text Editor:
+# Plain Text Total Editor:
 
-**Total Plain Text Editor** is designed to allow the creation and editing of plain text files. You can create files from scratch or open them in editing mode.
+**Plain Text Total Editor** is designed to allow the creation and editing of plain text files. You can create files from scratch or open them in editing mode.
 
 ## Application behavior:
 The formats it accepts are: TXT, HTML, CSS, JavaScript, JSON, Python, Perl, C, C++, and MarkDown. The application does not perform validations on the structure of the document. Its operation is that of a basic notepad-type editor.
@@ -24,4 +24,4 @@ You can check the privacy policy in [Total-Plain-Text-Editor Pivacy Policy](http
 ## Donate:
 If you like the app, please [support us with a coffee](https://buymeacoffee.com/total.plain.text.editor) ;D
 
-&copy; 2024 Total Plain Text Editor
+&copy; 2024 Plain Text Total Editor
