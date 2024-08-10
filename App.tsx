@@ -146,7 +146,7 @@ const FileEditor = () => {
 
             <View style={ { justifyContent: 'center', alignItems: 'center' } }>
                 <Text style={ styles.label }>
-                    <Link url="https://juanse77.github.io/total-plain-text-editor/">
+                    <Link url="https://juanse77.github.io/plain-text-total-editor/">
                         © { new Date().getFullYear() } Plain Text Total Editor
                     </Link>
                 </Text>
