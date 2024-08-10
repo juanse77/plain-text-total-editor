@@ -108,6 +108,7 @@ const FileEditor = () => {
 
     const newFile = function () {
         setFileName( '' );
+        setCurrentFileName( '' );
         setFileContent( '' );
         setFileUri( null );
     };
@@ -129,6 +130,7 @@ const FileEditor = () => {
                 value={ fileContent }
                 onChangeText={ setFileContent }
                 placeholder="Write your notes..."
+                placeholderTextColor="#555"
             />
             <Text style={ styles.label }>Set the file name:</Text>
             <TextInput
@@ -136,6 +138,7 @@ const FileEditor = () => {
                 onChangeText={ setFileName }
                 value={ fileName }
                 placeholder="Enter the file name..."
+                placeholderTextColor="#555"
             />
             <TouchableOpacity style={ styles.button } onPress={ saveFileContent } activeOpacity={ 0.8 }>
                 <Text style={ styles.buttonText }>Save Changes</Text>
@@ -193,6 +196,7 @@ const styles = StyleSheet.create( {
         borderRadius: 3,
         fontSize: 12,
         color: '#333',
+        backgroundColor: 'white',
     },
     label: {
         fontWeight: 'bold',
@@ -222,7 +226,8 @@ const styles = StyleSheet.create( {
     buttonText: {
         fontSize: 12,                // Tamaño de texto
         color: 'white',              // Color del texto
-        textTransform: 'uppercase',  // Texto en mayúsculas
+        textTransform: 'uppercase',
+        fontWeight: 'bold',
     },
 } );
 
