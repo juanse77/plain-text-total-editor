@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     View,
     Text,
@@ -22,6 +22,9 @@ const FileEditor = () => {
     const [ fileName, setFileName ] = useState( '' );
     const [ fileContent, setFileContent ] = useState( '' );
     const [ currentFileName, setCurrentFileName ] = useState( '' );
+
+    const inputRef = useRef<TextInput>( null );
+
 
     let fileNameLabel = "";
 
@@ -87,6 +90,7 @@ const FileEditor = () => {
     const saveFileContent = () => {
         if ( !fileName ) {
             Alert.alert( "You must give a file name" );
+            inputRef.current?.focus();
             return;
         }
 
@@ -134,6 +138,7 @@ const FileEditor = () => {
             />
             <Text style={ styles.label }>Set the file name:</Text>
             <TextInput
+                ref={ inputRef }
                 style={ styles.input }
                 onChangeText={ setFileName }
                 value={ fileName }
