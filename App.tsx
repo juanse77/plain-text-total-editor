@@ -4,10 +4,9 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    Switch,
     StyleSheet,
     Alert,
-    Linking,
+    ScrollView,
 } from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
@@ -24,9 +23,6 @@ const FileEditor = () => {
     const [ currentFileName, setCurrentFileName ] = useState( '' );
 
     const inputRef = useRef<TextInput>( null );
-
-
-    let fileNameLabel = "";
 
     useEffect( () => {
         const handleFileIntentReceived = ( event ) => {
@@ -117,6 +113,7 @@ const FileEditor = () => {
         setFileUri( null );
     };
 
+
     return (
         <View style={ styles.container }>
             <TouchableOpacity style={ styles.button } onPress={ openFile } activeOpacity={ 0.8 }>
@@ -128,14 +125,20 @@ const FileEditor = () => {
                     <Text style={ styles.buttonText }>+</Text>
                 </TouchableOpacity>
             </View>
-            <TextInput
-                style={ styles.textInput }
-                multiline
-                value={ fileContent }
-                onChangeText={ setFileContent }
-                placeholder="Write your notes..."
-                placeholderTextColor="#555"
-            />
+            <ScrollView
+                horizontal={ true }
+                style={ styles.scroll }
+                showsHorizontalScrollIndicator={ true }>
+                <TextInput
+                    style={ styles.textInput } // Usar el ancho ajustado
+                    onChangeText={ setFileContent }
+                    multiline={ true }
+                    value={ fileContent }
+                    placeholder="Write your notes..."
+                    placeholderTextColor="#555"
+                    scrollEnabled={ true }
+                />
+            </ScrollView>
             <Text style={ styles.label }>Set the file name:</Text>
             <TextInput
                 ref={ inputRef }
@@ -181,11 +184,21 @@ const styles = StyleSheet.create( {
         fontWeight: 'bold',
         color: '#333',
     },
+    scroll: {
+        width: '100%',
+        flex: 1,
+        backgroundColor: '#fff',
+        borderColor: 'gray',
+        marginTop: 10,
+        borderWidth: 1,
+        borderRadius: 3,
+    },
     textInput: {
         flex: 1,
-        borderColor: '#ccc',
+        width: 5000,
+        minHeight: '100%',
+        borderColor: '#fff',
         borderWidth: 1,
-        marginTop: 10,
         padding: 5,
         fontSize: 16,
         backgroundColor: '#fff',
