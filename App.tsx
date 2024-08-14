@@ -7,7 +7,7 @@ import {
     Switch,
     StyleSheet,
     Alert,
-    Linking,
+    ScrollView,
 } from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
@@ -22,11 +22,9 @@ const FileEditor = () => {
     const [ fileName, setFileName ] = useState( '' );
     const [ fileContent, setFileContent ] = useState( '' );
     const [ currentFileName, setCurrentFileName ] = useState( '' );
+    const [ isEnabled, setIsEnabled ] = useState( false );
 
     const inputRef = useRef<TextInput>( null );
-
-
-    let fileNameLabel = "";
 
     useEffect( () => {
         const handleFileIntentReceived = ( event ) => {
@@ -117,6 +115,8 @@ const FileEditor = () => {
         setFileUri( null );
     };
 
+    const toggleSwitch = () => setIsEnabled( previousState => !previousState );
+
     return (
         <View style={ styles.container }>
             <TouchableOpacity style={ styles.button } onPress={ openFile } activeOpacity={ 0.8 }>
@@ -128,15 +128,31 @@ const FileEditor = () => {
                     <Text style={ styles.buttonText }>+</Text>
                 </TouchableOpacity>
             </View>
-            <TextInput
-                style={ styles.textInput }
-                multiline
-                value={ fileContent }
-                onChangeText={ setFileContent }
-                placeholder="Write your notes..."
-                placeholderTextColor="#555"
-            />
-            <Text style={ styles.label }>Set the file name:</Text>
+            <ScrollView
+                style={ styles.scrollView } >
+                <TextInput
+                    style={ styles.textInput }
+                    multiline={ true }
+                    editable={ isEnabled }
+                    value={ fileContent }
+                    onChangeText={ setFileContent }
+                    placeholder={ isEnabled ? "Write your notes..." : "Read only" }
+                    placeholderTextColor="#555"
+                    scrollEnabled={ false }
+                />
+            </ScrollView>
+            <View style={ styles.menu }>
+                <Text style={ styles.label }>Set the file name:</Text>
+                <View style={ { flexDirection: 'row' } }>
+                    <Text style={ [ styles.label, { marginRight: 3 } ] }>Edit:</Text>
+                    <Switch
+                        trackColor={ { false: '#767577', true: '#FF6347' } }
+                        thumbColor={ isEnabled ? '#FF6347' : '#f4f3f4' }
+                        onValueChange={ toggleSwitch }
+                        value={ isEnabled }
+                    />
+                </View>
+            </View>
             <TextInput
                 ref={ inputRef }
                 style={ styles.input }
@@ -180,12 +196,20 @@ const styles = StyleSheet.create( {
         fontSize: 12,
         fontWeight: 'bold',
         color: '#333',
+        width: '80%',
+    },
+    scrollView: {
+        flex: 1,
+        width: '100%',
+        //borderColor: 'gray',
+        //borderRadius: 3,
+        borderWidth: 1,
+        marginTop: 10,
+        backgroundColor: '#fff',
     },
     textInput: {
         flex: 1,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        marginTop: 10,
+        minHeight: '100%',
         padding: 5,
         fontSize: 16,
         backgroundColor: '#fff',
