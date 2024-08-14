@@ -130,7 +130,8 @@ const FileEditor = () => {
                 </TouchableOpacity>
             </View>
             <ScrollView
-                style={ styles.scrollView } >
+                style={ styles.scrollView }
+                showsVerticalScrollIndicator={ true } >
                 <TextInput
                     style={ styles.textInput }
                     multiline={ true }
@@ -168,7 +169,7 @@ const FileEditor = () => {
 
             <View style={ { justifyContent: 'center', alignItems: 'center' } }>
                 <Text style={ styles.label }>
-                    <Link url="https://juanse77.github.io/plain-text-total-editor/">
+                    <Link url="https://plain-text-total-editor.com">
                         © { new Date().getFullYear() } Plain Text Total Editor
                     </Link>
                 </Text>

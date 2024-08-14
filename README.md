@@ -15,11 +15,11 @@ This project is licensed under the MIT License.
 
 ## Contact:
 
-For any questions or support, please contact [juanseraar@outlook.es](mailto:juanseraar@outlook.es).
+For any questions or support, please contact [administration@plain-text-total-editor.com](mailto:administration@plain-text-total-editor.com).
 
 ## Privacy Policy:
 
-You can check the privacy policy in [Plain-Text-Total-Editor Pivacy Policy](https://juanse77.github.io/plain-text-total-editor/privacy-policy.html)
+You can check the privacy policy in [Plain-Text-Total-Editor Pivacy Policy](https://plain-text-total-editor.com/privacy-policy.html)
 
 ## Donate:
 If you like the app, please [support us with a coffee](https://buymeacoffee.com/total.plain.text.editor) ;D
