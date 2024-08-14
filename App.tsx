@@ -22,7 +22,7 @@ const FileEditor = () => {
     const [ fileName, setFileName ] = useState( '' );
     const [ fileContent, setFileContent ] = useState( '' );
     const [ currentFileName, setCurrentFileName ] = useState( '' );
-    const [ isEnabled, setIsEnabled ] = useState( false );
+    const [ isEnabled, setIsEnabled ] = useState( true );
 
     const inputRef = useRef<TextInput>( null );
 
@@ -113,6 +113,7 @@ const FileEditor = () => {
         setCurrentFileName( '' );
         setFileContent( '' );
         setFileUri( null );
+        setIsEnabled( true );
     };
 
     const toggleSwitch = () => setIsEnabled( previousState => !previousState );
@@ -201,8 +202,6 @@ const styles = StyleSheet.create( {
     scrollView: {
         flex: 1,
         width: '100%',
-        //borderColor: 'gray',
-        //borderRadius: 3,
         borderWidth: 1,
         marginTop: 10,
         backgroundColor: '#fff',
