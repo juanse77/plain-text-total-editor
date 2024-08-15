@@ -114,14 +114,15 @@ class MediaStoreModule(
     }
 
     private fun createFileUri(fileName: String): Uri? {
-        val values =
-            ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                put(MediaStore.MediaColumns.MIME_TYPE, getMimeTypeFromExtension(fileName))
-                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
-            }
+        val notesFolder = "${Environment.DIRECTORY_DOWNLOADS}/notes"
+        val values = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+            put(MediaStore.MediaColumns.MIME_TYPE, getMimeTypeFromExtension(fileName))
+            put(MediaStore.MediaColumns.RELATIVE_PATH, notesFolder)
+        }
         return reactContext.contentResolver.insert(MediaStore.Files.getContentUri("external"), values)
     }
+
 
     private fun writeContentToFile(
         uri: Uri?,
