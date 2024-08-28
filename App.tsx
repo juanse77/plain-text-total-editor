@@ -140,19 +140,21 @@ const FileEditor = () => {
     return (
         <View style={ styles.container }>
             <View style={ styles.menu }>
+                <TouchableOpacity style={ [ styles.add, { marginRight: 2 } ] } onPress={ newFile } activeOpacity={ 0.8 }>
+                    <Text style={ styles.buttonText }>+</Text>
+                </TouchableOpacity>
+
                 <TouchableOpacity style={ [ styles.button, { flex: 1 } ] } onPress={ openFile } activeOpacity={ 0.8 }>
                     <Text style={ styles.buttonText }>Select file</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={ styles.add } onPress={ newFile } activeOpacity={ 0.8 }>
-                    <Text style={ styles.buttonText }>+</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={ styles.menu }>
-                <Text style={ styles.fileName }>File: { currentFileName }</Text>
-                <TouchableOpacity style={ styles.add } onPress={ rateApp } activeOpacity={ 0.8 }>
+
+                <TouchableOpacity style={ [ styles.add, { marginLeft: 2 } ] } onPress={ rateApp } activeOpacity={ 0.8 }>
                     <Image source={ require( './img/comments.png' ) } style={ styles.image } />
                 </TouchableOpacity>
             </View>
+            
+            <Text style={ styles.fileName }>File: { currentFileName }</Text>
+            
             <ScrollView
                 style={ styles.scrollView }
                 showsVerticalScrollIndicator={ true } >
@@ -222,7 +224,7 @@ const styles = StyleSheet.create( {
         fontSize: 12,
         fontWeight: 'bold',
         color: '#333',
-        width: '80%',
+        width: '100%',
     },
     scrollView: {
         flex: 1,
@@ -275,7 +277,6 @@ const styles = StyleSheet.create( {
         alignItems: 'center',
         justifyContent: 'center',
         marginVertical: 3,
-        marginLeft: 3,
         width: 50,
     },
     buttonText: {
