@@ -8,12 +8,15 @@ import {
     StyleSheet,
     Alert,
     ScrollView,
+    Image,
 } from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
 import { NativeModules, NativeEventEmitter } from 'react-native';
+import Rate, { AndroidMarket } from 'react-native-rate';
 
 import Link from './components/Link';
+
 
 const { FileIntentModule, MediaStoreModule } = NativeModules;
 
@@ -118,15 +121,36 @@ const FileEditor = () => {
 
     const toggleSwitch = () => setIsEnabled( previousState => !previousState );
 
+    const rateApp = () => {
+        const options = {
+            GooglePackageName: "com.totalplaintextreader",
+            preferredAndroidMarket: AndroidMarket.Google,
+            preferInApp: false,
+            openAppStoreIfInAppFails: true,
+            fallbackPlatformURL: "https://plain-text-total-editor.com/404.html"
+        };
+
+        Rate.rate( options, success => {
+            if ( success ) {
+                console.log( 'User Rated.' );
+            }
+        } );
+    };
+
     return (
         <View style={ styles.container }>
-            <TouchableOpacity style={ styles.button } onPress={ openFile } activeOpacity={ 0.8 }>
-                <Text style={ styles.buttonText }>Select file</Text>
-            </TouchableOpacity>
             <View style={ styles.menu }>
-                <Text style={ styles.fileName }>File: { currentFileName }</Text>
+                <TouchableOpacity style={ [ styles.button, { flex: 1 } ] } onPress={ openFile } activeOpacity={ 0.8 }>
+                    <Text style={ styles.buttonText }>Select file</Text>
+                </TouchableOpacity>
                 <TouchableOpacity style={ styles.add } onPress={ newFile } activeOpacity={ 0.8 }>
                     <Text style={ styles.buttonText }>+</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={ styles.menu }>
+                <Text style={ styles.fileName }>File: { currentFileName }</Text>
+                <TouchableOpacity style={ styles.add } onPress={ rateApp } activeOpacity={ 0.8 }>
+                    <Image source={ require( './img/comments.png' ) } style={ styles.image } />
                 </TouchableOpacity>
             </View>
             <ScrollView
@@ -240,8 +264,8 @@ const styles = StyleSheet.create( {
         borderRadius: 3,             // Bordes redondeados
         alignItems: 'center',        // Alinea el texto al centro horizontalmente
         justifyContent: 'center',    // Alinea el texto al centro verticalmente
-        width: '100%',               // Ocupa el 100% del ancho del contenedor padre
-        marginVertical: 3,           // Margen vertical para separar de otros elementos si es necesario
+        marginVertical: 3,
+        resizeMode: 'contain',           // Margen vertical para separar de otros elementos si es necesario
     },
     add: {
         backgroundColor: '#FF6347',
@@ -251,13 +275,19 @@ const styles = StyleSheet.create( {
         alignItems: 'center',
         justifyContent: 'center',
         marginVertical: 3,
+        marginLeft: 3,
+        width: 50,
     },
     buttonText: {
-        fontSize: 12,                // Tamaño de texto
+        fontSize: 16,                // Tamaño de texto
         color: 'white',              // Color del texto
         textTransform: 'uppercase',
         fontWeight: 'bold',
     },
+    image: {
+        width: 20,
+        height: 20,
+    }
 } );
 
 export default FileEditor;
