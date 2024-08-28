@@ -279,7 +279,7 @@ const styles = StyleSheet.create( {
         width: 50,
     },
     buttonText: {
-        fontSize: 16,                // Tamaño de texto
+        fontSize: 14,                // Tamaño de texto
         color: 'white',              // Color del texto
         textTransform: 'uppercase',
         fontWeight: 'bold',
