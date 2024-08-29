@@ -140,15 +140,15 @@ const FileEditor = () => {
     return (
         <View style={ styles.container }>
             <View style={ styles.menu }>
-                <TouchableOpacity style={ [ styles.add, { marginRight: 1, borderTopRightRadius: 0, borderBottomRightRadius: 0 } ] } onPress={ newFile } activeOpacity={ 0.8 }>
+                <TouchableOpacity style={ [ styles.add, { marginRight: 2, borderTopRightRadius: 0, borderBottomRightRadius: 0 } ] } onPress={ newFile } activeOpacity={ 0.8 }>
                     <Text style={ styles.buttonText }>+</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={ [ styles.button, { flex: 1 } ] } onPress={ openFile } activeOpacity={ 0.8 }>
-                    <Text style={ [ styles.buttonText, { borderRadius: 0 } ] }>Select file</Text>
+                <TouchableOpacity style={ [ styles.button, { flex: 1, borderRadius: 0 } ] } onPress={ openFile } activeOpacity={ 0.8 }>
+                    <Text style={ styles.buttonText }>Select file</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={ [ styles.add, { marginLeft: 1, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } ] } onPress={ rateApp } activeOpacity={ 0.8 }>
+                <TouchableOpacity style={ [ styles.add, { marginLeft: 2, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } ] } onPress={ rateApp } activeOpacity={ 0.8 }>
                     <Image source={ require( './img/comments.png' ) } style={ styles.image } />
                 </TouchableOpacity>
             </View>
@@ -286,8 +286,8 @@ const styles = StyleSheet.create( {
         fontWeight: 'bold',
     },
     image: {
-        width: 20,
-        height: 20,
+        width: 21,
+        height: 21,
     }
 } );
 
