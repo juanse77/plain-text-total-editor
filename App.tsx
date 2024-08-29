@@ -140,21 +140,21 @@ const FileEditor = () => {
     return (
         <View style={ styles.container }>
             <View style={ styles.menu }>
-                <TouchableOpacity style={ [ styles.add, { marginRight: 2 } ] } onPress={ newFile } activeOpacity={ 0.8 }>
+                <TouchableOpacity style={ [ styles.add, { marginRight: 1, borderTopRightRadius: 0, borderBottomRightRadius: 0 } ] } onPress={ newFile } activeOpacity={ 0.8 }>
                     <Text style={ styles.buttonText }>+</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={ [ styles.button, { flex: 1 } ] } onPress={ openFile } activeOpacity={ 0.8 }>
-                    <Text style={ styles.buttonText }>Select file</Text>
+                    <Text style={ [ styles.buttonText, { borderRadius: 0 } ] }>Select file</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={ [ styles.add, { marginLeft: 2 } ] } onPress={ rateApp } activeOpacity={ 0.8 }>
+                <TouchableOpacity style={ [ styles.add, { marginLeft: 1, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } ] } onPress={ rateApp } activeOpacity={ 0.8 }>
                     <Image source={ require( './img/comments.png' ) } style={ styles.image } />
                 </TouchableOpacity>
             </View>
-            
+
             <Text style={ styles.fileName }>File: { currentFileName }</Text>
-            
+
             <ScrollView
                 style={ styles.scrollView }
                 showsVerticalScrollIndicator={ true } >
