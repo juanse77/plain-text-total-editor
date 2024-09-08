@@ -1,6 +1,6 @@
 # Plain Text Total Editor:
 
-**Plain Text Total Editor** is designed to allow the creation and editing of plain text files. You can create files from scratch or open them in editing mode.
+**Plain Text Total Editor** is designed to allow the creation and edition of plain text files. You can create files from scratch or open them in editing mode.
 
 ## Application behavior:
 The formats it accepts are: TXT, HTML, CSS, JavaScript, JSON, Python, Perl, C, C++, and MarkDown. The application does not perform validations on the structure of the document. Its operation is that of a basic notepad-type editor. The program can be used in write or read mode activating the 'edit switch'.
