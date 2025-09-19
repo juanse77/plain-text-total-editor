@@ -1,29 +1,21 @@
 buildscript {
-    // Project-level properties
-    ext {
-        buildToolsVersion = "34.0.0"
-        minSdkVersion = 23
-        compileSdkVersion = 34
-        targetSdkVersion = 34
-        ndkVersion = "26.1.10909125"
-        kotlinVersion = "1.9.22"  // Ensure this version is compatible with your project requirements
-    }
-
-    // Repositories for dependencies
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    // Dependencies for the build script
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion" // Kotlin Gradle plugin
-        classpath "com.android.tools.build:gradle:8.2.0" // Specify the appropriate version for your project
-        classpath "com.facebook.react:react-native-gradle-plugin" // React Native Gradle plugin, specify a version if necessary
-    }
-
+  repositories { google(); mavenCentral() }
+  dependencies {
+    classpath "com.android.tools.build:gradle:8.5.2"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.24"
+    // 👇 necesario en 0.74.x (sin versión; la aporta el includeBuild)
+    classpath "com.facebook.react:react-native-gradle-plugin"
+  }
 }
 
-// Apply the root project plugin for React Native
+// Necesario en RN 0.72+ (y en 0.74)
 apply plugin: "com.facebook.react.rootproject"
 
+ext {
+    //buildToolsVersion = "36.0.0"
+    minSdkVersion = 28
+    compileSdkVersion = 36
+    targetSdkVersion = 36
+    ndkVersion = "29.0.13599879"
+    kotlinVersion = "1.9.22"  // Ensure this version is compatible with your project requirements
+}

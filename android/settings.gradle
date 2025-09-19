@@ -1,4 +1,22 @@
-rootProject.name = 'TotalPlainTextReader'
-apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
-include ':app'
-includeBuild('../node_modules/@react-native/gradle-plugin')
+pluginManagement {
+  repositories { gradlePluginPortal(); google(); mavenCentral() }
+}
+
+dependencyResolutionManagement {
+  repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+  repositories {
+    google()
+    mavenCentral()
+    maven { url = uri("$rootDir/../node_modules/react-native/android") }
+  }
+}
+
+rootProject.name = "TotalPlainTextEditor"
+include(":app")
+
+// Composite build del plugin RN 0.74.x
+includeBuild("../node_modules/@react-native/gradle-plugin")
+
+// Autolinking del CLI (RN 0.74)
+apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
+applyNativeModulesSettingsGradle(settings)
