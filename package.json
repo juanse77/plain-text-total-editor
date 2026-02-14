@@ -1,6 +1,6 @@
 {
   "name": "TotalPlainTextEditor",
-  "version": "2.1.0",
+  "version": "3.1.0",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -11,8 +11,8 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "react": "18.2.0",
-    "react-native": "0.74.5",
+    "react": "18.3.1",
+    "react-native": "0.77.1",
     "react-native-document-picker": "^9.3.0",
     "react-native-fs": "^2.20.0",
     "react-native-intent": "^1.0.1",
@@ -24,10 +24,12 @@
     "@babel/core": "^7.20.0",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
-    "@react-native/babel-preset": "0.74.87",
-    "@react-native/eslint-config": "0.74.87",
-    "@react-native/metro-config": "0.74.87",
-    "@react-native/typescript-config": "0.74.87",
+    "@react-native/babel-preset": "0.77.1",
+    "@react-native/eslint-config": "0.77.1",
+    "@react-native/metro-config": "0.77.1",
+    "@react-native/typescript-config": "0.77.1",
+    "@react-native-community/cli": "^15.0.0",
+    "@react-native-community/cli-platform-android": "^15.0.0",
     "@types/react": "^18.2.6",
     "@types/react-test-renderer": "^18.0.0",
     "babel-jest": "^29.6.3",
@@ -36,7 +38,7 @@
     "patch-package": "^8.0.0",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "2.8.8",
-    "react-test-renderer": "18.2.0",
+    "react-test-renderer": "18.3.1",
     "typescript": "5.0.4"
   },
   "engines": {

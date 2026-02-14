@@ -1,22 +1,7 @@
-pluginManagement {
-  repositories { gradlePluginPortal(); google(); mavenCentral() }
-}
-
-dependencyResolutionManagement {
-  repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
-  repositories {
-    google()
-    mavenCentral()
-    maven { url = uri("$rootDir/../node_modules/react-native/android") }
-  }
-}
+pluginManagement { includeBuild("../node_modules/@react-native/gradle-plugin") }
+plugins { id("com.facebook.react.settings") }
+extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
 
 rootProject.name = "TotalPlainTextEditor"
 include(":app")
-
-// Composite build del plugin RN 0.74.x
 includeBuild("../node_modules/@react-native/gradle-plugin")
-
-// Autolinking del CLI (RN 0.74)
-apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
-applyNativeModulesSettingsGradle(settings)

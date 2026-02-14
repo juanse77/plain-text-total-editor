@@ -2,28 +2,21 @@ apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
+react {
+    autolinkLibrariesWithApp()
+}
 
-def CFG        = rootProject.ext
-def COMPILE_SDK= CFG.has('compileSdkVersion') ? (CFG.compileSdkVersion as int) : 36
-def MIN_SDK    = CFG.has('minSdkVersion')     ? (CFG.minSdkVersion as int)     : 28
-def TARGET_SDK = CFG.has('targetSdkVersion')  ? (CFG.targetSdkVersion as int)  : COMPILE_SDK
-def NDK_VER    = CFG.has('ndkVersion')        ? CFG.ndkVersion                  : null
-
-// (opcional) bloque react
-react { /* ... si lo usas ... */ }
-
-// AHORA sí, el bloque android:
 android {
   namespace "com.totalplaintextreader"
-  compileSdk COMPILE_SDK
-  if (NDK_VER) { ndkVersion NDK_VER }
+  compileSdk rootProject.ext.compileSdkVersion
+  ndkVersion rootProject.ext.ndkVersion
 
   defaultConfig {
     applicationId "com.totalplaintextreader"
-    minSdk MIN_SDK
-    targetSdk TARGET_SDK
-    versionCode 21
-    versionName "2.1.0"
+    minSdkVersion rootProject.ext.minSdkVersion
+    targetSdkVersion rootProject.ext.targetSdkVersion
+    versionCode 25
+    versionName "3.1.0"
   }
 
   signingConfigs {
@@ -47,20 +40,18 @@ android {
 }
 
 dependencies {
-  // React Native (ya lo tendrás)
+  // React Native
   implementation("com.facebook.react:react-android")
+
   if (hermesEnabled.toBoolean()) {
     implementation("com.facebook.react:hermes-android")
   } else {
-    implementation "org.webkit:android-jsc:+"
+    implementation("org.webkit:android-jsc:+")
   }
 
-  // 👉 Necesario para Theme.AppCompat.*
+  // AppCompat theme
   implementation("androidx.appcompat:appcompat:1.7.0")
 
-  // (Opcional) si usas componentes Material o quieres Theme.Material3
+  // Material components
   implementation("com.google.android.material:material:1.12.0")
 }
-
-apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
-applyNativeModulesAppBuildGradle(project)
