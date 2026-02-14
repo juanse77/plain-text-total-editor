@@ -44,6 +44,16 @@ class MediaStoreModule(
     }
 
     @ReactMethod
+    fun checkFileExists(fileName: String, promise: Promise) {
+        try {
+            val fileUri = checkIfFileExists(fileName)
+            promise.resolve(fileUri != null)
+        } catch (e: Exception) {
+            promise.reject("Exception", e)
+        }
+    }
+
+    @ReactMethod
     fun saveFile(
         fileName: String,
         fileContent: String,
@@ -91,12 +101,13 @@ class MediaStoreModule(
     }
 
     private fun checkIfFileExists(fileName: String): Uri? {
+        val notesFolder = "${Environment.DIRECTORY_DOWNLOADS}/notes"
         val fileCursor =
             reactContext.contentResolver.query(
                 MediaStore.Files.getContentUri("external"),
                 arrayOf(MediaStore.MediaColumns._ID),
-                "${MediaStore.MediaColumns.DISPLAY_NAME} = ?",
-                arrayOf(fileName),
+                "${MediaStore.MediaColumns.DISPLAY_NAME} = ? AND ${MediaStore.MediaColumns.RELATIVE_PATH} = ?",
+                arrayOf(fileName, "$notesFolder/"),
                 null,
             )
         fileCursor?.use { cursor ->

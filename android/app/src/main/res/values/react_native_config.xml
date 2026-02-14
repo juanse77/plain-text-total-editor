@@ -1,0 +1,4 @@
+<resources>
+  <bool name="react_enable_bridgeless">false</bool>
+  <bool name="react_fabric_enabled">false</bool>
+</resources>

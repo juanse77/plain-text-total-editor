@@ -24,45 +24,45 @@ const { FileIntentModule, MediaStoreModule } = NativeModules;
 
 const FileEditor = () => {
     const insets = useSafeAreaInsets();
-    const [ fileUri, setFileUri ] = useState( null );
-    const [ fileName, setFileName ] = useState( '' );
-    const [ fileContent, setFileContent ] = useState( '' );
-    const [ currentFileName, setCurrentFileName ] = useState( '' );
-    const [ isEnabled, setIsEnabled ] = useState( true );
+    const [fileUri, setFileUri] = useState<string | null>(null);
+    const [fileName, setFileName] = useState('');
+    const [fileContent, setFileContent] = useState('');
+    const [currentFileName, setCurrentFileName] = useState('');
+    const [isEnabled, setIsEnabled] = useState(true);
 
-    const inputRef = useRef<TextInput>( null );
+    const inputRef = useRef<TextInput>(null);
 
-    useEffect( () => {
-        const handleFileIntentReceived = ( event ) => {
-            setFileUri( event.uri );
-            setFileName( event.name );
-            setCurrentFileName( event.name );
-            setFileContent( event.content );
+    useEffect(() => {
+        const handleFileIntentReceived = (event: any) => {
+            setFileUri(event.uri);
+            setFileName(event.name);
+            setCurrentFileName(event.name);
+            setFileContent(event.content);
         };
 
-        const eventEmitter = new NativeEventEmitter( NativeModules.FileIntentModule );
-        const subscription = eventEmitter.addListener( 'onFileIntentReceived', handleFileIntentReceived );
+        const eventEmitter = new NativeEventEmitter(NativeModules.FileIntentModule);
+        const subscription = eventEmitter.addListener('onFileIntentReceived', handleFileIntentReceived);
 
         return () => subscription.remove();
-    }, [] );
+    }, []);
 
-    useEffect( () => {
+    useEffect(() => {
         FileIntentModule.getInitialIntent()
-            .then( ( data ) => {
-                setFileUri( data.uri );
-                setFileName( data.name );
-                setCurrentFileName( data.name );
-                setFileContent( data.content );
-            } )
-            .catch( ( error ) => {
-                console.log( 'Error getting file intent:', error );
-            } );
-    }, [] );
+            .then((data: any) => {
+                setFileUri(data.uri);
+                setFileName(data.name);
+                setCurrentFileName(data.name);
+                setFileContent(data.content);
+            })
+            .catch((error: any) => {
+                console.log('Error getting file intent:', error);
+            });
+    }, []);
 
     async function openFile() {
         /* trunk-ignore(eslint/prettier/prettier) */
         try {
-            const res = await DocumentPicker.pick( {
+            const res = await DocumentPicker.pick({
                 type: [
                     DocumentPicker.types.plainText,
                     'text/markdown',
@@ -74,55 +74,75 @@ const FileEditor = () => {
                     'text/x-perl',
                     'text/x-c++src',
                 ],
-            } );
-            const file = res[ 0 ];
-            setFileUri( file.uri );
-            setFileName( file.name );
-            setCurrentFileName( file.name );
-            const content = await RNFS.readFile( file.uri, 'utf8' );
-            setFileContent( content );
-        } catch ( err ) {
-            if ( DocumentPicker.isCancel( err ) ) {
-                console.log( 'File selection cancelled' );
+            });
+            const file = res[0];
+            setFileUri(file.uri);
+            setFileName(file.name ?? '');
+            setCurrentFileName(file.name ?? '');
+            const content = await RNFS.readFile(file.uri, 'utf8');
+            setFileContent(content);
+        } catch (err) {
+            if (DocumentPicker.isCancel(err)) {
+                console.log('File selection cancelled');
             } else {
-                console.error( 'Error selecting file:', err );
-                Alert.alert( 'Error', 'Unable to open file' );
+                console.error('Error selecting file:', err);
+                Alert.alert('Error', 'Unable to open file');
             }
         }
     }
 
+    const performSave = () => {
+        MediaStoreModule.saveFile(fileName, fileContent).then((uri: string) => {
+            MediaStoreModule.getFileName(uri).then((savedName: string) => {
+                Alert.alert('File successfully saved as: ' + savedName);
+                setFileName(savedName);
+                setCurrentFileName(savedName);
+                console.log('File saved at URI:', uri);
+            }).catch((error: any) => {
+                Alert.alert('Error retrieving file name');
+                console.error('Error retrieving file name:', error);
+            });
+        }).catch((error: any) => {
+            Alert.alert('Error saving file');
+            console.error('Error saving file:', error);
+        });
+    };
+
     const saveFileContent = () => {
-        if ( !fileName ) {
-            Alert.alert( "You must give a file name" );
+        if (!fileName) {
+            Alert.alert("You must give a file name");
             inputRef.current?.focus();
             return;
         }
 
-        MediaStoreModule.saveFile( fileName, fileContent ).then( uri => {
-            MediaStoreModule.getFileName( uri ).then( fileName => {
-                Alert.alert( 'File successfully saved as: ' + fileName );
-                setFileName( fileName );
-                setCurrentFileName( fileName );
-                console.log( 'File saved at URI:', uri );
-            } ).catch( error => {
-                Alert.alert( 'Error retrieving file name' );
-                console.error( 'Error retrieving file name:', error );
-            } );
-        } ).catch( error => {
-            Alert.alert( 'Error saving file' );
-            console.error( 'Error saving file:', error );
-        } );
+        MediaStoreModule.checkFileExists(fileName).then((exists: boolean) => {
+            if (exists) {
+                Alert.alert(
+                    'File already exists',
+                    `"${fileName}" already exists in Downloads/notes. Do you want to overwrite it?`,
+                    [
+                        { text: 'Cancel', style: 'cancel' },
+                        { text: 'Overwrite', style: 'destructive', onPress: performSave },
+                    ]
+                );
+            } else {
+                performSave();
+            }
+        }).catch((error: any) => {
+            console.error('Error checking file:', error);
+            performSave();
+        });
     };
 
     const newFile = function () {
-        setFileName( '' );
-        setCurrentFileName( '' );
-        setFileContent( '' );
-        setFileUri( null );
-        setIsEnabled( true );
+        setFileName('');
+        setCurrentFileName('');
+        setFileContent('');
+        setFileUri(null);
+        setIsEnabled(true);
     };
 
-    const toggleSwitch = () => setIsEnabled( previousState => !previousState );
+    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
     const rateApp = () => {
         const options = {
@@ -133,75 +153,75 @@ const FileEditor = () => {
             fallbackPlatformURL: "https://plain-text-total-editor.com/404.html"
         };
 
-        Rate.rate( options, success => {
-            if ( success ) {
-                console.log( 'User Rated.' );
+        Rate.rate(options, success => {
+            if (success) {
+                console.log('User Rated.');
             }
-        } );
+        });
     };
 
     return (
-        <SafeAreaView style={[styles.container, { paddingTop: 0, paddingBottom: 0 }]} edges={['top','bottom']}>
-          <StatusBar translucent={false} backgroundColor="#f0f0f0" barStyle="dark-content" />
-            <View style={ styles.menu }>
-                <TouchableOpacity style={ [ styles.add, { marginRight: 2, borderTopRightRadius: 0, borderBottomRightRadius: 0 } ] } onPress={ newFile } activeOpacity={ 0.8 }>
-                    <Text style={ styles.buttonText }>+</Text>
+        <SafeAreaView style={[styles.container, { paddingTop: 0, paddingBottom: 0 }]} edges={['top', 'bottom']}>
+            <StatusBar translucent={false} backgroundColor="#f0f0f0" barStyle="dark-content" />
+            <View style={styles.menu}>
+                <TouchableOpacity style={[styles.add, { marginRight: 2, borderTopRightRadius: 0, borderBottomRightRadius: 0 }]} onPress={newFile} activeOpacity={0.8}>
+                    <Text style={styles.buttonText}>+</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={ [ styles.button, { flex: 1, borderRadius: 0 } ] } onPress={ openFile } activeOpacity={ 0.8 }>
-                    <Text style={ styles.buttonText }>Select file</Text>
+                <TouchableOpacity style={[styles.button, { flex: 1, borderRadius: 0 }]} onPress={openFile} activeOpacity={0.8}>
+                    <Text style={styles.buttonText}>Select file</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={ [ styles.add, { marginLeft: 2, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } ] } onPress={ rateApp } activeOpacity={ 0.8 }>
-                    <Image source={ require( '../../img/comments.png' ) } style={ styles.image } />
+                <TouchableOpacity style={[styles.add, { marginLeft: 2, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }]} onPress={rateApp} activeOpacity={0.8}>
+                    <Image source={require('../../img/comments.png')} style={styles.image} />
                 </TouchableOpacity>
             </View>
 
-            <Text style={ styles.fileName }>File: { currentFileName }</Text>
+            <Text style={styles.fileName}>File: {currentFileName}</Text>
 
             <ScrollView
-                style={ styles.scrollView }
+                style={styles.scrollView}
                 contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + 8 }}
-                showsVerticalScrollIndicator={ true }>
+                showsVerticalScrollIndicator={true}>
                 <TextInput
-                    style={ styles.textInput }
-                    multiline={ true }
-                    editable={ isEnabled }
-                    value={ fileContent }
-                    onChangeText={ setFileContent }
-                    placeholder={ isEnabled ? "Write your notes..." : "Read only" }
+                    style={styles.textInput}
+                    multiline={true}
+                    editable={isEnabled}
+                    value={fileContent}
+                    onChangeText={setFileContent}
+                    placeholder={isEnabled ? "Write your notes..." : "Read only"}
                     placeholderTextColor="#555"
-                    scrollEnabled={ false }
+                    scrollEnabled={false}
                 />
             </ScrollView>
-            <View style={ styles.menu }>
-                <Text style={ styles.label }>Set the file name:</Text>
-                <View style={ { flexDirection: 'row' } }>
-                    <Text style={ [ styles.label, { marginRight: 3 } ] }>Edit:</Text>
+            <View style={styles.menu}>
+                <Text style={styles.label}>Set the file name:</Text>
+                <View style={{ flexDirection: 'row' }}>
+                    <Text style={[styles.label, { marginRight: 3 }]}>Edit:</Text>
                     <Switch
-                        trackColor={ { false: '#767577', true: '#FF6347' } }
-                        thumbColor={ isEnabled ? '#FF6347' : '#f4f3f4' }
-                        onValueChange={ toggleSwitch }
-                        value={ isEnabled }
+                        trackColor={{ false: '#767577', true: '#FF6347' }}
+                        thumbColor={isEnabled ? '#ffffff' : '#f4f3f4'}
+                        onValueChange={toggleSwitch}
+                        value={isEnabled}
                     />
                 </View>
             </View>
             <TextInput
-                ref={ inputRef }
-                style={ styles.input }
-                onChangeText={ setFileName }
-                value={ fileName }
+                ref={inputRef}
+                style={styles.input}
+                onChangeText={setFileName}
+                value={fileName}
                 placeholder="Enter the file name..."
                 placeholderTextColor="#555"
             />
-            <TouchableOpacity style={ styles.button } onPress={ saveFileContent } activeOpacity={ 0.8 }>
-                <Text style={ styles.buttonText }>Save Changes</Text>
+            <TouchableOpacity style={styles.button} onPress={saveFileContent} activeOpacity={0.8}>
+                <Text style={styles.buttonText}>Save Changes</Text>
             </TouchableOpacity>
 
-            <View style={ { justifyContent: 'center', alignItems: 'center' } }>
-                <Text style={ styles.label }>
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={styles.label}>
                     <Link url="https://plain-text-total-editor.com">
-                        © { new Date().getFullYear() } Plain Text Total Editor
+                        © {new Date().getFullYear()} Plain Text Total Editor
                     </Link>
                 </Text>
             </View>
@@ -210,7 +230,7 @@ const FileEditor = () => {
     );
 };
 
-const styles = StyleSheet.create( {
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 5,
@@ -293,6 +313,6 @@ const styles = StyleSheet.create( {
         width: 21,
         height: 21,
     }
-} );
+});
 
 export default FileEditor;
