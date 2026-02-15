@@ -10,6 +10,7 @@ import {
     ScrollView,
     Image,
     StatusBar,
+    Keyboard,
 } from 'react-native';
 import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
 import DocumentPicker from 'react-native-document-picker';
@@ -29,8 +30,22 @@ const FileEditor = () => {
     const [fileContent, setFileContent] = useState('');
     const [currentFileName, setCurrentFileName] = useState('');
     const [isEnabled, setIsEnabled] = useState(true);
+    const [keyboardHeight, setKeyboardHeight] = useState(0);
 
     const inputRef = useRef<TextInput>(null);
+
+    useEffect(() => {
+        const showSub = Keyboard.addListener('keyboardDidShow', (e) => {
+            setKeyboardHeight(e.endCoordinates.height);
+        });
+        const hideSub = Keyboard.addListener('keyboardDidHide', () => {
+            setKeyboardHeight(0);
+        });
+        return () => {
+            showSub.remove();
+            hideSub.remove();
+        };
+    }, []);
 
     useEffect(() => {
         const handleFileIntentReceived = (event: any) => {
@@ -151,7 +166,7 @@ const FileEditor = () => {
     };
 
     return (
-        <SafeAreaView style={[styles.container, { paddingTop: 0, paddingBottom: 0 }]} edges={['top', 'bottom']}>
+        <SafeAreaView style={[styles.container, { paddingTop: 0, paddingBottom: keyboardHeight }]} edges={['top', 'bottom']}>
             <StatusBar translucent={false} backgroundColor="#f0f0f0" barStyle="dark-content" />
             <View style={styles.menu}>
                 <TouchableOpacity style={[styles.add, { marginRight: 2, borderTopRightRadius: 0, borderBottomRightRadius: 0 }]} onPress={newFile} activeOpacity={0.8}>
