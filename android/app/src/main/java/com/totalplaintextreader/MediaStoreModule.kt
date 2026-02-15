@@ -24,22 +24,65 @@ class MediaStoreModule(
     override fun getName(): String = "MediaStoreModule"
 
     private fun getMimeTypeFromExtension(fileName: String): String {
-        val extension = fileName.substringAfterLast('.', "")
-        return when (extension.toLowerCase()) {
-            "md" -> "text/markdown"
+        val extension = fileName.substringAfterLast('.', "").lowercase()
+        // No extension → use text/plain so Android appends .txt
+        if (extension.isEmpty() || extension == fileName.lowercase()) {
+            return "text/plain"
+        }
+        return when (extension) {
+            // Markup & documentation
+            "md", "markdown" -> "text/markdown"
+            "html", "htm" -> "text/html"
+            "xml" -> "text/xml"
+            "xhtml" -> "application/xhtml+xml"
+            // Data & config formats
             "json" -> "application/json"
-            "html" -> "text/html"
+            "csv" -> "text/csv"
+            "tsv" -> "text/tab-separated-values"
+            "yaml", "yml" -> "text/yaml"
+            "toml" -> "application/toml"
+            "ini", "cfg" -> "text/x-ini"
+            "properties" -> "text/x-properties"
+            "env" -> "text/plain"
+            // Stylesheets
             "css" -> "text/css"
-            "js" -> "application/javascript"
-            "py" -> "text/x-python"
-            "pl" -> "text/x-perl"
-            "pm" -> "text/x-perl"
-            "cpp" -> "text/x-c++src"
-            "cxx" -> "text/x-c++src"
-            "cc" -> "text/x-c++src"
-            "h" -> "text/x-c++src"
-            "hpp" -> "text/x-c++src"
-            else -> "text/plain" // Default MIME type
+            "scss" -> "text/x-scss"
+            "sass" -> "text/x-sass"
+            "less" -> "text/x-less"
+            // JavaScript & TypeScript
+            "js", "mjs", "cjs" -> "application/javascript"
+            "ts" -> "application/typescript"
+            "jsx" -> "text/jsx"
+            "tsx" -> "text/tsx"
+            // Scripting languages
+            "py", "pyw" -> "text/x-python"
+            "pl", "pm" -> "text/x-perl"
+            "rb" -> "text/x-ruby"
+            "lua" -> "text/x-lua"
+            "sh", "bash", "zsh" -> "text/x-shellscript"
+            "php" -> "application/x-httpd-php"
+            // Compiled language sources
+            "c" -> "text/x-c"
+            "h" -> "text/x-chdr"
+            "cpp", "cxx", "cc" -> "text/x-c++src"
+            "hpp", "hxx", "hh" -> "text/x-c++hdr"
+            "cs" -> "text/x-csharp"
+            "java" -> "text/x-java-source"
+            "kt", "kts" -> "text/x-kotlin"
+            "go" -> "text/x-go"
+            "rs" -> "text/x-rustsrc"
+            "swift" -> "text/x-swift"
+            // Other text types
+            "sql" -> "application/sql"
+            "diff", "patch" -> "text/x-diff"
+            "log" -> "text/x-log"
+            "tex", "latex" -> "text/x-tex"
+            "rtf" -> "text/rtf"
+            "r" -> "text/x-r"
+            "txt", "text" -> "text/plain"
+            // Default: use application/octet-stream to prevent Android
+            // from appending an unwanted extension like .txt
+            else -> "application/octet-stream"
         }
     }
 
@@ -60,12 +103,16 @@ class MediaStoreModule(
         promise: Promise
     ) {
         try {
-            var fileUri = checkIfFileExists(fileName)
+            val cleanName = fileName.trim()
+            val mimeType = getMimeTypeFromExtension(cleanName)
+            Log.d("MediaStoreModule", "saveFile: name='$cleanName', mime='$mimeType'")
+
+            var fileUri = checkIfFileExists(cleanName)
 
             if (fileUri != null) {
                 writeContentToFile(fileUri, fileContent)
             } else {
-                fileUri = createFileUri(fileName)
+                fileUri = createFileUri(cleanName)
                 writeContentToFile(fileUri, fileContent)
             }
 

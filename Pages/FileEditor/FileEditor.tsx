@@ -63,17 +63,7 @@ const FileEditor = () => {
         /* trunk-ignore(eslint/prettier/prettier) */
         try {
             const res = await DocumentPicker.pick({
-                type: [
-                    DocumentPicker.types.plainText,
-                    'text/markdown',
-                    'application/json',
-                    'text/html',
-                    'text/css',
-                    'application/javascript',
-                    'text/x-python',
-                    'text/x-perl',
-                    'text/x-c++src',
-                ],
+                type: [DocumentPicker.types.allFiles],
             });
             const file = res[0];
             setFileUri(file.uri);

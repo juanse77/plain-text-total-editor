@@ -36,13 +36,53 @@
             <!-- Tipos MIME específicos -->
             <data android:mimeType="text/plain" />
             <data android:mimeType="text/markdown" />
-            <data android:mimeType="application/json" />
             <data android:mimeType="text/html" />
+            <data android:mimeType="text/xml" />
+            <data android:mimeType="application/xml" />
+            <data android:mimeType="application/xhtml+xml" />
+            <data android:mimeType="application/json" />
+            <data android:mimeType="text/csv" />
+            <data android:mimeType="text/tab-separated-values" />
+            <data android:mimeType="text/yaml" />
+            <data android:mimeType="application/x-yaml" />
+            <data android:mimeType="application/toml" />
+            <data android:mimeType="text/x-ini" />
+            <data android:mimeType="text/x-properties" />
+            <data android:mimeType="application/x-httpd-php" />
             <data android:mimeType="text/css" />
+            <data android:mimeType="text/x-scss" />
+            <data android:mimeType="text/x-sass" />
+            <data android:mimeType="text/x-less" />
             <data android:mimeType="application/javascript" />
+            <data android:mimeType="text/javascript" />
+            <data android:mimeType="application/typescript" />
             <data android:mimeType="text/x-python" />
+            <data android:mimeType="application/x-python-code" />
             <data android:mimeType="text/x-perl" />
+            <data android:mimeType="text/x-ruby" />
+            <data android:mimeType="text/x-lua" />
+            <data android:mimeType="text/x-shellscript" />
+            <data android:mimeType="application/x-sh" />
+            <data android:mimeType="text/x-c" />
+            <data android:mimeType="text/x-chdr" />
             <data android:mimeType="text/x-c++src" />
+            <data android:mimeType="text/x-c++hdr" />
+            <data android:mimeType="text/x-csharp" />
+            <data android:mimeType="text/x-java-source" />
+            <data android:mimeType="text/x-kotlin" />
+            <data android:mimeType="text/x-go" />
+            <data android:mimeType="text/x-rustsrc" />
+            <data android:mimeType="text/x-swift" />
+            <data android:mimeType="text/x-diff" />
+            <data android:mimeType="text/x-log" />
+            <data android:mimeType="text/x-sql" />
+            <data android:mimeType="application/sql" />
+            <data android:mimeType="application/x-latex" />
+            <data android:mimeType="text/x-tex" />
+            <data android:mimeType="text/rtf" />
+            <data android:mimeType="text/x-r" />
+            <data android:mimeType="text/jsx" />
+            <data android:mimeType="text/tsx" />
         </intent-filter>
 
       </activity>
